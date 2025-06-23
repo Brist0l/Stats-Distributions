@@ -19,3 +19,7 @@ It’s the most basic discrete probability distribution, and the foundation for 
 - Computes Variance (based on simulated distribution)  
 - Displays a histogram of successes vs failures  
 - Measures execution time  
+
+## Example output
+
+![bern](https://github.com/Brist0l/Stats-Distributions/blob/main/imgs/bern.png)
