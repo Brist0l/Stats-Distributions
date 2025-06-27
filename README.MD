@@ -10,6 +10,14 @@ A **Bernoulli distribution** models a random experiment that has exactly two pos
 
 It’s the most basic discrete probability distribution, and the foundation for binomial and other distributions.
 
+## Binomial Distribution Support
+
+This project also supports the Binomial Distribution, a fundamental probability distribution that models the
+number of successes in a fixed number of independent Bernoulli trials, each with the same probability of 
+success `p`. The program allows users to calculate the Probability Mass Function (PMF) and the Cumulative 
+Distribution Function (CDF) for any valid number of trials `n` and success probability `p`. Additionally, it
+can simulate a binomial experiment `k` times, giving insight into the distribution's empirical behavior.
+
 ## What This Program Does
 
 - Simulates `n` Bernoulli trials with success probability `p`  

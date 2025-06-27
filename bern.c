@@ -3,13 +3,15 @@
 #include<time.h>
 #include<stdlib.h>
 
+#include"bin.h"
+
 void histogram(float suc_rate);
 float variance(int* sprt,int size,float p);
 float success_rate(float sim_suc,float total);
 float expected_val(int* sprt,int size,float p);
 bool check_support(int* sprt,int size,int val);
-float PMF(int val,float p,int* sprt,int size);
-int simulation(int num,float p);
+float bern_PMF(int val,float p,int* sprt,int size);
+int bern_simulation(int num,float p);
 int bern(float p);
 
 void histogram(float suc_rate){
@@ -18,12 +20,12 @@ void histogram(float suc_rate){
 
 	printf("Successes:  "); 
 	for(int i = 0;i < successes;i++)
-		printf("X");
+		printf("-");
 	printf("%*c  (%d%)\n",10-successes+1,' ',successes_percent);
 
 	printf("Failures :  "); 
 	for(int i = 0;i < 10-successes;i++)
-		printf("X");
+		printf("-");
 	printf("%*c  (%d%)\n",successes+1,' ',100-successes_percent);
 }
 
@@ -32,7 +34,7 @@ float variance(int* sprt,int size,float p){
 	float exs =0;
 
 	for(int i = 0;i < size;i++)
-		exs += ((float)*(sprt+i))*((float)*(sprt+i)) * PMF(*(sprt+i),p,sprt,size);	
+		exs += ((float)*(sprt+i))*((float)*(sprt+i)) * bern_PMF(*(sprt+i),p,sprt,size);	
 	
 	var = exs - expected_val(sprt,size,p)*expected_val(sprt,size,p);
 
@@ -47,7 +49,7 @@ float success_rate(float sim_suc,float total){
 float expected_val(int* sprt,int size,float p){
 	float E = 0;
 	for(int i = 0;i < size;i++)
-		E += (float)*(sprt+i) * PMF(*(sprt+i),p,sprt,size);	
+		E += (float)*(sprt+i) * bern_PMF(*(sprt+i),p,sprt,size);	
 	return E;
 }
 
@@ -69,7 +71,7 @@ bool check_support(int* sprt,int size,int val){
 	return false;
 }
 
-float PMF(int val,float p,int* sprt,int size){
+float bern_PMF(int val,float p,int* sprt,int size){
 	//P(X = val) = p	
 	if(!check_support(sprt,size,val))
 		fprintf(stderr,"Invalid support with val: %d\n",val);
@@ -79,15 +81,17 @@ float PMF(int val,float p,int* sprt,int size){
 		return 1-p;
 }
 
-int simulation(int num,float p){
+int bern_simulation(int num,float p){
 	int sucesses = 0;
 	for(int i = 0;i < num;i++){
-		if(bern(p) == 1){
-			printf("%d simulation:Selected\n",i);
+		int a = bern(p);
+//		printf("bern(p) for %d is %d\n",i,a);
+		if(a == 1){
+			printf("%d\t+\n",i+1);
 			sucesses++;
 		}
 		else
-			printf("%d simulation:Not Selected\n",i);
+			printf("%d\t-\n",i+1);
 	}
 
 	return sucesses;
@@ -109,14 +113,19 @@ int main(){
 	clock_t start_time = clock(); 
 	srand(time(NULL));
 
-	float p = 0.345;
-	int support[2] = {0,1};
+	float p = 0.5;
+	int support[11] = {0,1,2,3,4,5,6,7,8,9,10};
 	int total_sim = 10;
 
-	int success = simulation(total_sim,p);
-	float sucess_rate = success_rate((float)success,(float)total_sim);
-	histogram(sucess_rate);
-	
+//	int success = bern_simulation(total_sim,p);
+//	float sucess_rate = success_rate((float)success,(float)total_sim);
+//	histogram(sucess_rate);
+
+	float bin = bin_PMF(9,p,support,11,11);
+	printf("bin PMF:%f\n",bin);
+
+	bin_simulation(10,p,5);
+		
 	clock_t end_time = clock(); 
 	printf("Time taken:%f secs\n",(double)(end_time-start_time)/CLOCKS_PER_SEC);
 }
